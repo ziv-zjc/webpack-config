@@ -1,5 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 module.exports = {
     mode: 'development',
@@ -11,13 +12,11 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js'
     },
-    watch: true,
+    watch: true, //webpack感知文件变化，原理是循环遍历文件修改时间是否变化
     watchOptions: {
-        watchOptions: {
-            ignored: /node_modules/,
-            aggregateTimeout: 300,
-            poll: 1000
-        }
+        ignored: /node_modules/,
+        aggregateTimeout: 300,
+        poll: 1000 //每秒循环1000次
     },
     module: {
         rules: [{
@@ -55,7 +54,9 @@ module.exports = {
         ]
     },
     plugins: [
-        // new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
+        new CleanWebpackPlugin()
+
         // new HtmlWebpackPlugin({ template: './src/index.html' })
     ],
     devServer: {

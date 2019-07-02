@@ -2,6 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
+import './search.scss';
 
 class Search extends React.Component {
 
@@ -9,6 +10,7 @@ class Search extends React.Component {
         return <div > Search Text < /div>
     }
 }
+
 
 ReactDOM.render( <
     Search / > ,
