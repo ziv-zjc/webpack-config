@@ -5,7 +5,7 @@ const OptimizeCssAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const glob = require('glob')
-
+const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')
 
 const setMPA = () => {
     const entry = {}
@@ -22,7 +22,7 @@ const setMPA = () => {
                 new HtmlWebpackPlugin({ //html压缩，可以配置多个
                     template: path.join(__dirname, `src/${pageName}/index.html`), //模板所在位置 可以使用ejs语法
                     filename: `${pageName}.html`, //指定打包出来文件名称
-                    chunks: [pageName], //指定生成的html要使用哪些chunk；设置inject为true时，打包后生成的css、js会自动注入到html中
+                    chunks: ['vendors', 'commons', pageName], //指定生成的html要使用哪些chunk；设置inject为true时，打包后生成的css、js会自动注入到html中
                     inject: true,
                     minify: {
                         html5: true,
@@ -46,7 +46,7 @@ const setMPA = () => {
 const { entry, htmlWebpackPlugins } = setMPA()
 
 module.exports = {
-    mode: 'production',
+    mode: 'none', //1.设置为none不开启tree-shaking； 
     entry: entry,
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -55,7 +55,10 @@ module.exports = {
     module: {
         rules: [{
                 test: /\.js$/,
-                use: 'babel-loader'
+                use: [
+                    'babel-loader',
+                    'eslint-loader'
+                ]
             },
             {
                 test: /\.scss$/,
@@ -123,6 +126,9 @@ module.exports = {
             assetNameRegExp: /\.css$/g,
             cssProcessor: require('cssnano')
         }),
+
+        new CleanWebpackPlugin(), //清理构建目录产物
+        new webpack.optimize.ModuleConcatenationPlugin(), //开启scope hoisting 当mode设置成production时 默认开启
         // new HtmlWebpackPlugin({ //html压缩，可以配置多个
         //     template: path.join(__dirname, 'src/search.html'), //模板所在位置 可以使用ejs语法
         //     filename: 'search.html', //指定打包出来文件名称
@@ -138,7 +144,49 @@ module.exports = {
         //     }
 
         // }),
-        new CleanWebpackPlugin() //清理构建目录产物
+        // new HtmlWebpackExternalsPlugin({ //提取公共资源
+        //     externals: [{
+        //             module: 'react',
+        //             entry: '', //本地路径 或者 cdn url
+        //             global: 'React'
+        //         },
+        //         {
+        //             module: 'react-dom',
+        //             entry: '', //本地路径 或者 cdn url
+        //             global: 'ReactDOM'
+        //         }
+        //     ]
+        // })
         // new HtmlWebpackPlugin({ template: './src/index.html' })
+
     ].concat(htmlWebpackPlugins),
+    // optimization: {  //提取基础包
+    //     splitChunks: {
+    //         cacheGroups: {
+    //             commons: {
+    //                 test: /(react|react-dom)/,
+    //                 name: 'vendors',
+    //                 chunks: 'all'
+    //             }
+    //         }
+    //     }
+    // },
+    optimization: { //提取公共部分
+        splitChunks: {
+            minSize: 0,
+            cacheGroups: {
+                basisChunks: {
+                    test: /(react|react-dom)/,
+                    name: 'vendors',
+                    chunks: 'all'
+                },
+                commons: {
+                    name: 'commons',
+                    chunks: 'all',
+                    minChunks: 2
+                }
+            }
+        }
+    },
+    devtool: 'source-map'
 }
