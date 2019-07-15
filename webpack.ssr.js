@@ -10,31 +10,36 @@ const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')
 const setMPA = () => {
     const entry = {}
     const htmlWebpackPlugins = []
-    const entryFiles = glob.sync(path.join(__dirname, './src/*/index.js'))
+    const entryFiles = glob.sync(path.join(__dirname, './src/*/index-server.js'))
 
     Object.keys(entryFiles)
         .map((index) => {
             const entryFile = entryFiles[index]
-            const match = entryFile.match(/src\/(.*)\/index\.js/)
+            const match = entryFile.match(/src\/(.*)\/index-server\.js/)
             const pageName = match && match[1]
-            entry[pageName] = entryFile
-            htmlWebpackPlugins.push(
-                new HtmlWebpackPlugin({ //html压缩，可以配置多个
-                    template: path.join(__dirname, `src/${pageName}/index.html`), //模板所在位置 可以使用ejs语法
-                    filename: `${pageName}.html`, //指定打包出来文件名称
-                    chunks: ['vendors', 'commons', pageName], //指定生成的html要使用哪些chunk；设置inject为true时，打包后生成的css、js会自动注入到html中
-                    inject: true,
-                    minify: {
-                        html5: true,
-                        collapseWhitespace: true,
-                        preserveLineBreaks: false,
-                        minifyCSS: true,
-                        minifyJS: true,
-                        removeComments: false
-                    }
 
-                })
-            )
+            if (pageName) {  //有ssr文件 则添加入口 
+                entry[pageName] = entryFile
+                htmlWebpackPlugins.push(
+                    new HtmlWebpackPlugin({ //html压缩，可以配置多个
+                        template: path.join(__dirname, `src/${pageName}/index.html`), //模板所在位置 可以使用ejs语法
+                        filename: `${pageName}.html`, //指定打包出来文件名称
+                        chunks: ['vendors', 'commons', pageName], //指定生成的html要使用哪些chunk；设置inject为true时，打包后生成的css、js会自动注入到html中
+                        inject: true,
+                        minify: {
+                            html5: true,
+                            collapseWhitespace: true,
+                            preserveLineBreaks: false,
+                            minifyCSS: true,
+                            minifyJS: true,
+                            removeComments: false
+                        }
+
+                    })
+                )
+            }
+
+
         })
     console.log('entryFiles', entryFiles)
     return {
@@ -50,7 +55,8 @@ module.exports = {
     entry: entry,
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: '[name]_[chunkhash:8].js'
+        filename: '[name]-server.js', //ssr 不需要hash
+        libraryTarget: 'umd'
     },
     module: {
         rules: [{
@@ -63,6 +69,7 @@ module.exports = {
         {
             test: /\.scss$/,
             use: [
+
                 MiniCssExtractPlugin.loader, //style-loader与此loader不能同时使用  此load可以将css分离成单独文件
                 // 'style-loader', //node执行顺序是从右到左，因此先执行cssloader 然后再将解析好的css执行style将样式通过style标签放到header里
                 'css-loader',
@@ -174,11 +181,11 @@ module.exports = {
         splitChunks: {
             minSize: 0,
             cacheGroups: {
-                basisChunks: {
-                    test: /(react|react-dom)/,
-                    name: 'vendors',
-                    chunks: 'all'
-                },
+                // basisChunks: {
+                //     test: /(react|react-dom)/,
+                //     name: 'vendors',
+                //     chunks: 'all'
+                // },
                 commons: {
                     name: 'commons',
                     chunks: 'all',

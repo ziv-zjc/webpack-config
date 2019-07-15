@@ -1,0 +1,72 @@
+{
+    "error": [],
+    "extra": [],
+    "data": {
+        "list": [
+            {
+                "banner_redirect_type": "product",
+                "id": 4544,
+                "banner_utm_term": "banner757",
+                "extra": {
+                    "column_sku": "100031801",
+                    "column_type": 1,
+                    "product_type": "c1",
+                    "column_id": 207,
+                    "had_sub": false
+                },
+                "banner_cover": "https://static001.geekbang.org/resource/image/20/e9/20a4551d8bafbe719a2c4121ccc8fce9.jpg",
+                "banner_redirect_param": "100031801",
+                "banner_title": "7.15第一轮播图-从0打造音视频直播系统",
+                "score": 1032355271040
+            },
+            {
+                "banner_redirect_type": "product",
+                "id": 4536,
+                "banner_utm_term": "banner754",
+                "extra": {
+                    "column_sku": "100031401",
+                    "column_type": 3,
+                    "product_type": "c3",
+                    "column_id": 204,
+                    "had_sub": false
+                },
+                "banner_cover": "https://static001.geekbang.org/resource/image/66/36/66080600a8e6fd6bcc06c41e1adf7d36.jpg",
+                "banner_redirect_param": "100031401",
+                "banner_title": "7.15第二轮播图-微杨波微服务",
+                "score": 1028060130944
+            },
+            {
+                "banner_cover": "https://static001.geekbang.org/resource/image/28/80/2817ba5e656cc014d526a4a46b516480.jpg",
+                "banner_redirect_type": "article",
+                "banner_redirect_param": "107444",
+                "banner_title": "7.15第三轮播图-程序员的猫",
+                "score": 1023765163648,
+                "banner_utm_term": "banner756",
+                "id": 4540
+            },
+            {
+                "banner_cover": "https://static001.geekbang.org/resource/image/56/21/5639fe4bf51191264e46a647c2d15f21.jpg",
+                "banner_redirect_type": "article",
+                "banner_redirect_param": "102047",
+                "banner_title": "企业账号-长期",
+                "score": 1019470369152,
+                "banner_utm_term": "banner724",
+                "id": 4539
+            },
+            {
+                "banner_cover": "https://static001.geekbang.org/resource/image/cf/49/cf58a2111383725dca5d67ddd028a849.jpg",
+                "banner_redirect_type": "url",
+                "banner_redirect_param": "https://time.geekbang.org/training/100028201?utm_source=time_app&utm_medium=banner0708",
+                "banner_title": "极客大学-长期",
+                "score": 946455320320,
+                "banner_utm_term": "banner707",
+                "id": 4451
+            }
+        ],
+        "page": {
+            "count": 5,
+            "more": false
+        }
+    },
+    "code": 0
+}

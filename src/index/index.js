@@ -1,18 +1,18 @@
-import { helloword } from './helloword'
-import '../../common'
-let a = 1
+// import { helloword } from './helloword'
+// import '../../common'
+// let a = 1
 
 
-function bibao() {
+function bibao () {
     var cache = []
-    return function() {
+    return function () {
         cache.push("123")
         return cache
     }
 }
 
-function deepClone(initalObj, finalObj) {
-    let { keys, values } = Object
+function deepClone (initalObj, finalObj) {
+    let { keys } = Object
     let obj = finalObj || {}
     for (let key of keys(initalObj)) {
         let prop = initalObj[key]
@@ -30,9 +30,9 @@ function deepClone(initalObj, finalObj) {
 
 }
 
-function debounce(fn, delay) {
+function debounce (fn, delay) {
     let timer = null
-    return function() {
+    return function () {
         let context = this
         let args = arguments
         if (!timer) {
@@ -45,9 +45,9 @@ function debounce(fn, delay) {
     }
 }
 
-function throttle(fn, delay) {
+function throttle (fn, delay) {
     let timer = null
-    return function() {
+    return function () {
         let context = this
         let args = arguments
         if (!timer) {
@@ -61,7 +61,7 @@ function throttle(fn, delay) {
     }
 }
 
-function quickSort(ary) {
+function quickSort (ary) {
     let mid = Math.floor(ary.length / 2)
     let pivot = ary.splice(mid, 1); //删除基准项，并把基准项赋值给pivot；
     let left = [],

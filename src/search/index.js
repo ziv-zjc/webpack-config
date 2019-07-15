@@ -2,9 +2,9 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import '../../common'
+// import '../../common'
 import './search.scss';
-import { a } from './tree-shaking'
+// import { a } from './tree-shaking'
 
 class Search extends React.Component {
     constructor() {
@@ -15,27 +15,18 @@ class Search extends React.Component {
         }
     }
 
-    loadComponent() {
-        import ('./text.js').then((Text) => {
+    loadComponent () {
+        import('./text.js').then((Text) => {
             this.setState({
                 Text: Text.default
             })
         })
     }
-    render() {
+    render () {
         const { Text } = this.state
-        return <div > {
-            Text ? < Text / > : null
-        }
-        Search Text < img onClick = { this.loadComponent.bind(this) }
-        src = "" / >
-            <
-            /div>
+        return <div> {Text ? < Text /> : null}Search Text <img onClick={this.loadComponent.bind(this)} src="" /></div>
     }
 }
 
 
-ReactDOM.render( <
-    Search / > ,
-    document.getElementById('root')
-);
+ReactDOM.render(<Search />, document.getElementById('root'));
