@@ -30,6 +30,9 @@ class Search extends React.Component {
 }
 
 
+
+
+
 //ReactDOM.render(<Search />, document.getElementById('root'));  服务器端渲染不支持render方法
 
 module.exports = <Search />

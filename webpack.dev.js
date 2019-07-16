@@ -1,8 +1,11 @@
 const path = require('path')
 const webpack = require('webpack')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+
 const glob = require('glob')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin') //打包日志 提示优化
+
 
 const setMPA = () => {
     const entry = {}
@@ -57,48 +60,50 @@ module.exports = {
     },
     module: {
         rules: [{
-                test: /\.js$/,
-                use: 'babel-loader'
-            },
-            {
-                test: /\.scss$/,
-                use: [
-                    'style-loader', //node执行顺序是从右到左，因此先执行cssloader 然后再将解析好的css执行style将样式通过style标签放到header里
-                    'css-loader',
-                    'sass-loader'
-                ]
-            },
-            // {
-            //     test: /\.(png|jpg|jpeg|gif)$/,
-            //     use: 'file-loader'
-            // },
-            {
-                test: /\.(png|jpg|jpeg|gif)$/,
-                use: {
-                    loader: 'url-loader',
+            test: /\.js$/,
+            use: 'babel-loader'
+        },
+        {
+            test: /\.scss$/,
+            use: [
+                'style-loader', //node执行顺序是从右到左，因此先执行cssloader 然后再将解析好的css执行style将样式通过style标签放到header里
+                'css-loader',
+                'sass-loader'
+            ]
+        },
+        // {
+        //     test: /\.(png|jpg|jpeg|gif)$/,
+        //     use: 'file-loader'
+        // },
+        {
+            test: /\.(png|jpg|jpeg|gif)$/,
+            use: {
+                loader: 'url-loader',
+                options: {
                     options: {
-                        options: {
-                            limit: 10240 //10k以下图片会处理成base64
-                        }
+                        limit: 10240 //10k以下图片会处理成base64
                     }
                 }
-            },
-            {
-                test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
-                use: 'file-loader'
             }
+        },
+        {
+            test: /\.(woff|woff2|eot|ttf|otf|svg)$/,
+            use: 'file-loader'
+        }
             // { test: /\.txt$/, use: 'raw-loader' }
         ]
     },
     plugins: [
         new webpack.HotModuleReplacementPlugin(),
-        new CleanWebpackPlugin()
+        new CleanWebpackPlugin(),
+        new FriendlyErrorsWebpackPlugin()
 
         // new HtmlWebpackPlugin({ template: './src/index.html' })
     ].concat(htmlWebpackPlugins),
     devServer: {
         contentBase: './dist',
-        hot: true
+        hot: true,
+        stats: 'errors-only'
     },
-    devtool: 'source-map'
+    devtool: 'cheap-source-map'
 }

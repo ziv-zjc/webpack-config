@@ -6,6 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const glob = require('glob')
 const HtmlWebpackExternalsPlugin = require('html-webpack-externals-plugin')
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin') //打包日志 提示优化 成功 失败（错误堆栈，及解决方案） 警告（文件过大等）
 
 const setMPA = () => {
     const entry = {}
@@ -46,7 +47,7 @@ const setMPA = () => {
 const { entry, htmlWebpackPlugins } = setMPA()
 
 module.exports = {
-    mode: 'none', //1.设置为none不开启tree-shaking； 
+    mode: 'production', //1.设置为none不开启tree-shaking； 
     entry: entry,
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -128,6 +129,16 @@ module.exports = {
 
         new CleanWebpackPlugin(), //清理构建目录产物
         new webpack.optimize.ModuleConcatenationPlugin(), //开启scope hoisting 当mode设置成production时 默认开启
+        new FriendlyErrorsWebpackPlugin(), //处理构建提示
+        function () {    //处理构建异常
+            this.hooks.done.tap('done', (stats) => {  //this代表compile webpack3 的话 写成 this.plugin()  
+                if (stats.compilation.errors && stats.compilation.errors.length && process.argv.indexOf('--watch') == -1) {
+                    console.log('build error')
+                    process.exit(1) //错误码处理
+                    //可以进行上报处理
+                }
+            })
+        }
         // new HtmlWebpackPlugin({ //html压缩，可以配置多个
         //     template: path.join(__dirname, 'src/search.html'), //模板所在位置 可以使用ejs语法
         //     filename: 'search.html', //指定打包出来文件名称
@@ -187,5 +198,6 @@ module.exports = {
             }
         }
     },
-    devtool: 'source-map'
+    devtool: 'source-map',
+    stats: 'errors-only', //设置控制台错误信息
 }
